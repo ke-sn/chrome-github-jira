@@ -110,9 +110,10 @@ function statusCategoryColors(statusCategory) {
     // There are only "blue", "green", and "grey" in Jira
     switch (statusCategory.colorName) {
         case "blue":
-            return { color: "white", background: "rgb(150, 198, 222)" }
+        case "yellow":
+            return { color: "#0747A6", background: "#B3D4FF" }
         case "green":
-            return { color: "white", background: "#28a745" }
+            return { color: "#006644", background: "#ABF5D1" }
         default:
             return { color: "rgb(40, 40, 40)", background: "rgb(220, 220, 220)" }
     }
@@ -139,7 +140,6 @@ function headerBlock(issueKey,
             </div>
             <div class="TableObject-item">
                 <span class="State State--white" style="color: ${statusColor}; background: ${statusBackground}">
-                    ${statusIconHTML}
                     ${statusName}
                 </span>
             </div>
@@ -268,6 +268,7 @@ function handleCommitsTitle() {
 
 async function handlePrPage() {
     const titleEl = document.querySelector('h1 > span.js-issue-title');
+    const branchElement = document.querySelector('span.commit-ref.head-ref > a > span');
     const insertedJiraDataEl = document.querySelector('#insertedJiraData');
     const partialDiscussionHeaderEl = document.querySelector('#partial-discussion-header');
     if (!titleEl || insertedJiraDataEl) {
@@ -276,10 +277,19 @@ async function handlePrPage() {
     }
 
     const title = titleEl.innerHTML;
+    const branchName = branchElement.innerHTML;
 
-    const [ticketNumber] = title.match(/([A-Z0-9]+-[0-9]+)/);
+    let ticketNumber = null;
+    let matchResult = title.match(/([A-Z0-9]+-[0-9]+)/);
+    if (matchResult) {
+        ticketNumber = matchResult[0];
+    } else {
+        matchResult = branchName.match(/([A-Z0-9]+-[0-9]+)/);
+        if (matchResult) {
+            ticketNumber = matchResult[0];
+        }
+    }
     if (!ticketNumber) {
-        // Title was found, but ticket number wasn't.
         return false;
     }
 
