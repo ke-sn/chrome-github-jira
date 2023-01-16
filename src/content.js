@@ -191,11 +191,11 @@ function handleCommitsTitle() {
 }
 
 async function handlePrPage() {
-    const titleEl = document.querySelector('h1 > span.js-issue-title');
+    const titleEl = document.querySelector('h1 > bdi.js-issue-title');
     const branchElement = document.querySelector('span.commit-ref.head-ref > a > span');
     const insertedJiraDataEl = document.querySelector('#insertedJiraData');
     const partialDiscussionHeaderEl = document.querySelector('#partial-discussion-header');
-    if (!titleEl || insertedJiraDataEl) {
+    if (!titleEl && !branchElement || insertedJiraDataEl) {
         //If we didn't find a ticket, or the data is already inserted, cancel.
         return false;
     }
